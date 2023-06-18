@@ -11,20 +11,21 @@ Welcome to the Keras CNN Image Classification project repository. This project f
 
 The image classification project utilizes the power of Convolutional Neural Networks (CNNs), a popular deep learning architecture known for its effectiveness in handling visual data. This repository offers all the necessary code and resources to train and evaluate a CNN model using Keras for image classification tasks.
 
-**Features**
-
-The repository offers the following features:
+**STEPS**
 
 **1. Dataset Preparation**
 
-The project provides scripts and utilities to preprocess and prepare the dataset. It includes functions to handle various image dataset formats, such as resizing, normalizing, and augmenting the images. The dataset preparation module ensures that the data is properly formatted and ready for model training.
+The project provides scripts and utilities to preprocess and prepare the dataset. It includes functions to handle various image dataset formats, such as resizing and normalizing. The dataset preparation module ensures that the data is properly formatted and ready for model training.
 
 **2. Model Architecture**
 
-The CNN model architecture is implemented using the Keras library. The architecture consists of multiple convolutional layers, pooling layers, and fully connected layers designed to extract relevant features from the input images. The model supports both grayscale and RGB images.
+The CNN model architecture is implemented using the Keras library. The architecture consists of multiple convolutional layers, pooling layers, and fully connected layers designed to extract relevant features from the input images.
 
 **3. Training and Evaluation**
 
-The repository includes scripts for training the CNN model on the provided dataset using Keras. It supports various training configurations, including optimization algorithms, learning rate schedules, and regularization techniques. The training module efficiently utilizes available GPUs for faster model convergence.
+The repository includes scripts for training the CNN model on the provided dataset using Keras. It supports various training configurations, including optimization algorithms, dropout layers, activation functions and numper of epochs.
 
 After training, the repository provides evaluation scripts to assess the model's performance. The evaluation is based on accuracy, which measures the percentage of correctly classified images in the validation set.
+
+**4. Testing using UI**
+Finall the model is tested and used using a UI that allows the user to select and image from the machine and classify it.
