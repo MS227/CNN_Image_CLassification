@@ -7,7 +7,6 @@ pipreqsnb==0.2.4
 requests==2.28.1
 scikit-learn==1.2.0
 scipy==1.9.3
-keras
-opencv-python
+keras==2.12.0
+opencv-python==4.7.0.72
 tensorflow
-
