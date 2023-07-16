@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[1]:
+
+
 #Import the required libraries
 import keras
 import os
@@ -10,13 +13,18 @@ import pandas as pd
 import tensorflow as tf
 import matplotlib.pyplot  as plt
 from PIL import Image
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+
+
+# In[2]:
 
 
 #Set the image size to reresize all the images into (im_size x im_size x 3)
 global im_size
 im_size = 50 
 training_data = []
+
+
+# In[3]:
 
 
 #Get the path to the training data
@@ -30,6 +38,8 @@ Classes = next(os.walk(Path))[1] #The name of the folders
 print(f"\n{Classes}") #Print the classes 
 
 
+# In[4]:
+
 
 def image_processing(full_path = "path"):
 
@@ -40,6 +50,7 @@ def image_processing(full_path = "path"):
     return im
 
 
+# In[5]:
 
 
 #Read the training data & label them based on folder name
@@ -69,6 +80,8 @@ print("\n\n The Shape of the image is: ",training_data[0][0].shape)
 plt.imshow(training_data[1][0])
 plt.show()
 
+
+# In[6]:
 
 
 #Read the testing data & label them based on folder name
@@ -107,6 +120,8 @@ plt.imshow(testing_data[1][0])
 plt.show()
 
 
+# In[7]:
+
 
 #Get the labels names
 label_data = pd.DataFrame(label_data) #Convert the label_data in a DataFrame
@@ -114,12 +129,16 @@ label_data = label_data[1].unique() #Store the unique values in label_data (each
 print(label_data)
 
 
+# In[8]:
+
 
 #Shuffle The training and testing data
 import random
 random.shuffle(training_data)
 random.shuffle(testing_data)
 
+
+# In[9]:
 
 
 #Seprate the features and labels in the training data  from [Features, label] => X = features, Y = Label
@@ -131,6 +150,8 @@ for features,label in training_data:
     y_train.append(label)
 print("Number of training images:",len(y_train),"\nExamples of the labels",y_train[:5])
 
+
+# In[10]:
 
 
 #Seprate the features and labels in the training data  from [Features, label] => X = features, Y = Label
@@ -145,6 +166,8 @@ for features,label in testing_data:
 print("Number of testing images:",len(y_test),"\nExamples of the labels",y_test[:5])
 
 
+# In[11]:
+
 
 #Reshape the features to (n x im_size x im_size x 3)
 
@@ -154,10 +177,14 @@ X_test = np.array(X_test).reshape(-1, im_size, im_size,3)
 
 # # Code
 
+# In[12]:
+
 
 print("The shape of the training features is:",X_train.shape)
 print("The shape of the testing features is:",X_test.shape)
 
+
+# In[13]:
 
 
 #Show an example from the training images
@@ -165,6 +192,7 @@ idx = 80
 ex = X_train[idx].copy()
 plt.imshow(ex)
 plt.show()
+
 
 
 # Split the image into its BGR channels
@@ -178,7 +206,11 @@ plt.imshow(ex)
 plt.show()
 
 
+# In[15]:
+
+
 #Impor the libraries for the NN
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -192,6 +224,7 @@ from keras.utils import np_utils
 
 
 #Build the NN Architechture
+
 model=Sequential()
 model.add(Conv2D(128,(3,3), strides=1, input_shape=[im_size, im_size, 3], activation='relu'))
 model.add(MaxPooling2D(pool_size=(3,3)))
@@ -222,9 +255,19 @@ model.add(Dense(50,activation='relu'))
 model.add(Dense(len(label_data), activation='softmax')) #softmax, relu, sigmoid, linear
 
 
+# In[17]:
+
 
 model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']) #Adam, SGD
+
+
+# In[18]:
+
+
 model.summary()
+
+
+# In[19]:
 
 
 #Prepare the training data
@@ -236,6 +279,7 @@ X_test = np.asarray(X_test).astype('float32').reshape((-1,im_size,im_size,3))
 y_test = np.asarray(y_test).astype('float32').reshape((-1,1))
 
 
+# In[20]:
 
 
 file_path= "model3.h5"
@@ -244,10 +288,12 @@ model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=file_pat
                                                                save_best_only=True)
 
 
-history = model.fit(X_train, y_train, epochs=30,
+history = model.fit(X_train, y_train, epochs=50,
                     callbacks=[model_checkpoint_callback], verbose=1, validation_data=(X_test, y_test))
 # history = model.fit(train_generator, epochs=25,validation_data = validation_generator, verbose = 1)
 
+
+# In[21]:
 
 
 import matplotlib.pyplot as plt
@@ -268,6 +314,8 @@ plt.figure()
 
 plt.show()
 
+
+# In[22]:
 
 
 from keras.models import load_model
@@ -295,7 +343,7 @@ model = load_model('model3.h5')
 def image_display(full_path = "path"):
     image = Image.open(full_path)
     image.thumbnail((400, 400))  # Adjust the size of the thumbnail
-    image.show(image)
+    display(image)
 
 def image_processing(full_path = "path"):
     image_display(full_path = full_path)
@@ -333,7 +381,7 @@ def model_pred(im_array):
     display_data = pd.DataFrame([pred])
     display_data.columns = label_data
 
-    print(display_data)
+    display(display_data)
     
     return class_
     
@@ -341,113 +389,195 @@ def model_pred(im_array):
 # label_data = ['Left', 'Pedestrian', 'Right', 'Roundabout', 'Speed 100', 'Speed 120', 'Speed 60', 'Speed 80', 'Stop', 'Traffic light']
 # im_size =100
 
+
+# In[24]:
+
+
 # Process the image
 image_array = image_processing("Data/Validation/Roundabout/Roundabout_4.jpg")
 
 # Use the image array for model prediction
 prediction = model_pred(image_array)
-#############################################################################################################
 
-#The UI Configuration
 
-##############################################################################################################
-# import tkinter as tk
-# from tkinter import filedialog
-# from tkinter import *
-# from PIL import ImageTk, Image
-# import numpy as np
-# import cv2
-# import os
-#
-# #load the trained model to classify the images
-# im_size=50
-#
+
+# In[31]:
+
+
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image
+import os
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+from PIL import Image
+import cv2
+import numpy as np
+import pandas as pd
+
+from keras.models import load_model
+label_data = ['Left', 'Pedestrian', 'Right', 'Roundabout', 'Speed 100', 'Speed 120', 'Speed 60', 'Speed 80', 'Stop', 'Traffic light']
+
+model = load_model('model3.h5')
+
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image
+import numpy as np
+
+
+# Function to handle button click event
+def browse_image():
+    # Open file dialog to select an image file
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png;*.bmp")])
+    # Check if a file was selected
+    if file_path:
+        
+        
+        # Process the image
+        image_array = image_processing(file_path)
+        
+        # Use the image array for model prediction
+        prediction = model_pred(image_array)
+        
+        # Display the prediction
+        prediction_label.configure(text="Prediction: " + prediction)
+
+# Create the main window
+window = tk.Tk()
+window.title("Image Prediction")
+
+# Create a button to browse for an image
+browse_button = tk.Button(window, text="Browse Image", command=browse_image)
+browse_button.pack(pady=10)
+
+# Create a label for displaying the prediction
+prediction_label = tk.Label(window, text="Prediction: ")
+prediction_label.pack(pady=10)
+
+# Create a label for displaying the image (optional)
+# image_label = tk.Label(window)
+# image_label.pack(pady=10)
+
+# Run the main window loop
+window.mainloop()
+
+
+
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import *
+from PIL import ImageTk, Image
+import numpy as np
+import pandas as pd
+import os
+import cv2
+from keras.models import load_model
+
+im_size=50
 # label_data = ['Left', 'Pedestrian', 'Right', 'Roundabout', 'Speed 100', 'Speed 120', 'Speed 60', 'Speed 80', 'Stop', 'Traffic light']
-#
-# from keras.models import load_model
-# model = load_model('model3.h5')
-#
-#
-# #initialise GUI
-#
-# top=tk.Tk()
-# top.geometry('800x600')
-# top.title('Image Classification')
-# top.configure(background='#CDCDCD')
-# label=Label(top,background='#CDCDCD', font=('arial',15,'bold'))
-# sign_image = Label(top)
-#
-# def classify(file_path):
-#
-#     im = cv2.imread(file_path)
-#     im=cv2.resize(im,(im_size, im_size))
-#     #print(im.shape)
-#     im = np.asarray(im).astype('float32').reshape((im_size,im_size,3))
-#
-#     im=im/255.0
-#     im = np.array(im).reshape(-1, im_size, im_size,3)
-#     pred=model.predict(im)
-#     #print(pred)
-#     pred = np.array(pred)
-#     pred = pred.reshape(-1,)
-#     ix = np.argmax(pred)
-#     print(ix)
-#
-#     #print(label_data)
-# #     class_  = label_data.loc[ix,0]
-#     class_ = label_data[ix]
-#     print(class_)
-#     proba = model.predict(im)
-#     print("\n-----------------------\nPredicted image: ",class_)
-#     print("Probability of other classes: ", proba)
-#     label.configure(foreground='#011638', text=class_)
-#
-#
-#
-#
-#
-# def proba_():
-#     classify_b=Button(top,text=proba,
-#    command=lambda: classify(file_path),padx=10,pady=5)
-#     classify_b.configure(background='#364156', foreground='white',font=('arial',20,'bold'))
-#     classify_b.place(relx=0.79,rely=0.46)
-#
-#
-#
-#
-# def show_classify_button(file_path):
-#     classify_b=Button(top,text="Classify Image",
-#    command=lambda: classify(file_path),padx=10,pady=5)
-#     classify_b.configure(background='#364156', foreground='white',font=('arial',10,'bold'))
-#     classify_b.place(relx=0.79,rely=0.46)
-#
-#
-#
-# def upload_image():
-#     try:
-#         file_path=filedialog.askopenfilename()
-#         uploaded=Image.open(file_path)
-#         uploaded.thumbnail(((top.winfo_width()/2.25),
-#     (top.winfo_height()/2.25)))
-#         im=ImageTk.PhotoImage(uploaded)
-#         sign_image.configure(image=im)
-#         sign_image.image=im
-#         label.configure(text='')
-#         show_classify_button(file_path)
-#     except:
-#         pass
-#
-# upload=Button(top,text="Choose an image",command=upload_image,
-#   padx=10,pady=5)
-#
-# upload.configure(background='#364156', foreground='white',
-#     font=('arial',10,'bold'))
-#
-# upload.pack(side=BOTTOM,pady=50)
-# sign_image.pack(side=BOTTOM,expand=True)
-# label.pack(side=BOTTOM,expand=True)
-# heading = Label(top, text="Image Classification",pady=15, font=('arial',20,'bold'))
-#
-# heading.configure(background='#CDCDCD',foreground='#364156')
-# heading.pack()
-# top.mainloop()
+# im_size =100
+
+#load the trained model to classify the images
+model = load_model('model3.h5')
+
+
+#initialise GUI
+top=tk.Tk()
+top.geometry('800x600')
+top.title('Image Classification')
+top.configure(background='#CDCDCD')
+label=Label(top,background='#CDCDCD', font=('arial',15,'bold'))
+sign_image = Label(top)
+
+def classify(file_path):  
+    global pred
+    
+    im = cv2.imread(file_path)
+    im = cv2.resize(im,(im_size, im_size))
+    #im = np.asarray(im).astype('float32').reshape((im_size,im_size,3))    
+    im=im/255.0
+    im = np.array(im).reshape(-1, im_size, im_size,3) 
+
+    pred=model.predict(im)
+    #print(pred)
+    pred = np.array(pred)
+    pred = pred.reshape(-1,)
+    idx = np.argmax(pred)
+    print("______________________________________________\nThe index of the predicted class:",idx)
+    class_ = label_data[idx]
+    label.configure(foreground='#011638', text=class_)
+
+
+    #The probabilty of other classes
+    print("Predicted image: ",class_)
+    # Calculate the sum of the values
+    total = np.sum(pred)
+
+    # Convert the values to percentages
+    pred = (pred / total) * 100
+    pred = pred.astype("int32")
+    print("Probability of other classes: ", pred)
+
+    display_data = pd.DataFrame([pred])
+    display_data.columns = label_data
+    display(display_data)
+    
+
+
+def proba_():
+    classify_b=Button(top,text=proba,
+   command=lambda: classify(file_path),padx=10,pady=5)
+    classify_b.configure(background='#364156', foreground='white',font=('arial',20,'bold'))
+    classify_b.place(relx=0.79,rely=0.46)
+    
+    
+    
+    
+def show_classify_button(file_path):
+    classify_b=Button(top,text="Classify Image",
+   command=lambda: classify(file_path),padx=10,pady=5)
+    classify_b.configure(background='#364156', foreground='white',font=('arial',10,'bold'))
+    classify_b.place(relx=0.79,rely=0.46)
+
+    
+    
+def upload_image():
+    try:
+        file_path=filedialog.askopenfilename()
+        uploaded=Image.open(file_path)
+        uploaded.thumbnail(((top.winfo_width()/2.25),
+    (top.winfo_height()/2.25)))
+        im=ImageTk.PhotoImage(uploaded)
+        sign_image.configure(image=im)
+        sign_image.image=im
+        label.configure(text='')
+        show_classify_button(file_path)
+    except:
+        pass
+
+upload=Button(top,text="Choose an image",command=upload_image,
+  padx=10,pady=5)
+
+upload.configure(background='#364156', foreground='white',
+    font=('arial',10,'bold'))
+
+upload.pack(side=BOTTOM,pady=50)
+sign_image.pack(side=BOTTOM,expand=True)
+label.pack(side=BOTTOM,expand=True)
+heading = Label(top, text="Image Classification",pady=15, font=('arial',20,'bold'))
+
+heading.configure(background='#CDCDCD',foreground='#364156')
+heading.pack()
+
+
+
+top.mainloop()
+
+
+#['Left', 'Pedestrian', 'Right', 'Roundabout', 'Speed 100', 'Speed 120', 'Speed 60', 'Speed 80', 'Stop', 'Traffic light']
+
+############################################
+############################################
+############################################
+############################################
