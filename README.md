@@ -1,5 +1,5 @@
 # CNN_Image_CLassification
-This repository provides code and resources for training, evaluating and testing an image classification model using Keras, based on Convolutional Neural Networks (CNNs).
+This repository provides code and resources for training, evaluating and testing an image classification model based on Convolutional Neural Networks (CNNs).
 
 1) Download the whole Repo with the files
 2) Install the libraries using the requirements.txt file 
